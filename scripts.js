@@ -37,20 +37,32 @@ const clearBoard = () => {
     sq7.innerText = '';
     sq8.innerText = '';
     sq9.innerText = '';
+    counter = 0;
 
 } 
 
 gameCounter = 0;
 const gameEnd = (player) => {
-    gameCounter++;
-    player.wins++;
-    let playAgain = prompt(`
-    ${player.name} WINS!
-    Do y'all want to play again! (y/n)
-    `).toLowerCase()
+    if (player === "Draw") {
+        let playAgain = prompt(`
+        Nobody WINS! It's a DRAW!
+        Do y'all want to play again! (y/n)
+        `).toLowerCase()
 
-    if (playAgain === 'y' || playAgain === 'yes') {
-        clearBoard();
+        if (playAgain === 'y' || playAgain === 'yes') {
+            clearBoard();
+        }
+    } else {
+        gameCounter++;
+        player.wins++;
+        let playAgain = prompt(`
+        ${player.name} WINS!
+        Do y'all want to play again! (y/n)
+        `).toLowerCase()
+
+        if (playAgain === 'y' || playAgain === 'yes') {
+            clearBoard();
+        }
     }
 }
 
@@ -62,6 +74,7 @@ let p1 = document.createElement('p')
 p1.setAttribute("id",player1.sigel);
 p1.innerText = `Xs - ${player1.name} >> ${player1.wins}`
 statusArea.append(p1);
+
 const player2 = new Player('O', p2Name);
 let p2 = document.createElement('p')
 p2.setAttribute("id",player2.sigel);
@@ -69,13 +82,11 @@ p2.innerText = `Os - ${player2.name} >> ${player2.wins}`
 statusArea.append(p2);
 
 counter = 1;
-
-
 let player = player1;
 
 const checkForWinner = (player, counter) => {
     let sigel = player.sigel;
-    console.log(sigel)
+    
     switch (true) {
         case (
             sq1.innerText === sq2.innerText &&
@@ -91,6 +102,7 @@ const checkForWinner = (player, counter) => {
             sq4.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq7.innerText === sq8.innerText &&
@@ -98,6 +110,7 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq1.innerText === sq4.innerText &&
@@ -105,6 +118,7 @@ const checkForWinner = (player, counter) => {
             sq7.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq2.innerText === sq5.innerText &&
@@ -112,6 +126,7 @@ const checkForWinner = (player, counter) => {
             sq8.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq3.innerText === sq6.innerText &&
@@ -119,6 +134,7 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq3.innerText === sq5.innerText &&
@@ -126,6 +142,7 @@ const checkForWinner = (player, counter) => {
             sq7.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
         case (
             sq1.innerText === sq5.innerText &&
@@ -133,131 +150,85 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            gameEnd(player);
             break;
-        case (counter === 8):
+        case (counter === 9):
             console.log("DRAW");
+            gameEnd('Draw');
             break;
-
+        default:
     }
 }
 
-
-sq1.addEventListener("click", () => {
-    if(sq1.innerText === ''){
-    let sigel = player.getSigel()
-    sq1.innerHTML = `${sigel}`;
-    sq1.setAttribute("class",`${player.color}`);
-    checkForWinner(player, counter);
-    player = counter%2 === 0 ? player1 : player2;
-    counter++;
+const gameClick = (sqr) => {
+    if(sqr.innerText === ''){
+        let sigel = player.getSigel()
+        sqr.setAttribute("class",`${player.color}`);
+        sqr.innerHTML = `${sigel}`;
     } else {
         throw "already clciked"
     }
+}
+
+const takeTurns = () => {
+    console.log(`${player.sigel} : ${counter}`)
+    counter++;
+    player = counter%2 === 0 ? player2 : player1;
+    
+
+}
+
+sq1.addEventListener("click", () => {
+    gameClick(sq1)
+    checkForWinner(player, counter);
+    takeTurns()
 
 })
 
 sq2.addEventListener("click", () => {
-    if(sq2.innerText === ''){
-        let sigel = player.getSigel()
-        sq2.innerHTML = `${sigel}`;
-        sq2.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq2)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq3.addEventListener("click", () => {
-    if(sq3.innerText === ''){
-        let sigel = player.getSigel()
-        sq3.innerHTML = `${sigel}`;
-        sq3.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq3)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq4.addEventListener("click", () => {
-    if(sq4.innerText === ''){
-    let sigel = player.getSigel()
-    sq4.innerHTML = `${sigel}`;
-    sq4.setAttribute("class",`${player.color}`);
+    gameClick(sq4)
     checkForWinner(player, counter);
-    player = counter%2 === 0 ? player1 : player2;
-    counter++;
-    } else {
-        throw "already clciked"
-    }
-
+    takeTurns()
 })
 
 sq5.addEventListener("click", () => {
-    if(sq5.innerText === ''){
-        let sigel = player.getSigel()
-        sq5.innerHTML = `${sigel}`;
-        sq5.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq5)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq6.addEventListener("click", () => {
-    if(sq6.innerText === ''){
-        let sigel = player.getSigel()
-        sq6.innerHTML = `${sigel}`;
-        sq6.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq6)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq7.addEventListener("click", () => {
-    if(sq7.innerText === ''){
-        let sigel = player.getSigel()
-        sq7.innerHTML = `${sigel}`;
-        sq7.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
-
+    gameClick(sq7)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq8.addEventListener("click", () => {
-    if(sq8.innerText === ''){
-        let sigel = player.getSigel()
-        sq8.innerHTML = `${sigel}`;
-        sq8.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq8)
+    checkForWinner(player, counter);
+    takeTurns()
 })
 
 sq9.addEventListener("click", () => {
-    if(sq9.innerText === ''){
-        let sigel = player.getSigel()
-        sq9.innerHTML = `${sigel}`;
-        sq9.setAttribute("class",`${player.color}`);
-        checkForWinner(player, counter);
-        player = counter%2 === 0 ? player1 : player2;
-        counter++;
-        } else {
-            throw "already clciked"
-        }
+    gameClick(sq9)
+    checkForWinner(player, counter);
+    takeTurns()
 })
