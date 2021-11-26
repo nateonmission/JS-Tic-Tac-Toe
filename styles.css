@@ -1,12 +1,31 @@
 /* Gameboard */
 @import url('https://fonts.googleapis.com/css2?family=Revalia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Press+Start+2P&display=swap');
+
+#banner {
+    
+    font-family: 'Revalia', cursive;
+    font-size: 4REM;
+    text-align: center;
+}
+
 
 #game-board {
-    font-family: 'Revalia', cursive;
+    font-family: 'Monoton', cursive;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
     background-color: black;
+}
+
+.red {
+    color: red;
+    background-color: white;
+}
+
+.blue {
+    color: blue;
+    background-color: white;
 }
 
 #game-board {
