@@ -1,4 +1,8 @@
 let playOn = true;
+let gameHistory = []
+let gameCounter = 0;
+let turnCounter = 1;
+
 const sq1 = document.querySelector("#sq1");
 const sq2 = document.querySelector("#sq2");
 const sq3 = document.querySelector("#sq3");
@@ -9,8 +13,6 @@ const sq7 = document.querySelector("#sq7");
 const sq8 = document.querySelector("#sq8");
 const sq9 = document.querySelector("#sq9");
 const statusArea = document.querySelector("#status")
-
-
 
 
 class Player {
@@ -26,7 +28,6 @@ class Player {
     }
 }
 
-let gameHistory = []
 
 const clearBoard = () => {
     sq1.innerText = '';
@@ -40,7 +41,7 @@ const clearBoard = () => {
     sq9.innerText = '';
 } 
 
-gameCounter = 0;
+
 const gameEnd = (player) => {
     if (player === "Draw") {
         let playAgain = prompt(`
@@ -67,27 +68,38 @@ const gameEnd = (player) => {
             playOn = false;
         }
     }
+    p1Div.innerText = `${player1.sigel}s played by ${player1.name} >> ${player1.wins} games won`
+    p2Div.innerText = `${player2.sigel}s played by ${player2.name} >> ${player2.wins} games won`
 }
+
+
+const buildScoreBoard = (player) => {
+    let playerDiv = document.createElement('div')
+    playerDiv.setAttribute("id",player.sigel);
+    playerDiv.setAttribute("class", "player-div");
+    statusArea.append(playerDiv);
+    playerDiv.innerText = `${player.sigel}s >> ${player.name} >> ${player.wins} games won`
+}
+
 
 let p1Name = prompt("Player 1 with be Xs. What is your name? ");
 let p2Name = prompt("Player 2 with be Os. What is your name? ");
 
 const player1 = new Player('X', p1Name);
-let p1 = document.createElement('p')
-p1.setAttribute("id",player1.sigel);
-p1.innerText = `Xs - ${player1.name} >> ${player1.wins}`
-statusArea.append(p1);
+buildScoreBoard(player1)
 
 const player2 = new Player('O', p2Name);
-let p2 = document.createElement('p')
-p2.setAttribute("id",player2.sigel);
-p2.innerText = `Os - ${player2.name} >> ${player2.wins}`
-statusArea.append(p2);
+buildScoreBoard(player2)
 
-counter = 1;
+
+const p1Div = document.querySelector("#X");
+const p2Div = document.querySelector("#O");
+p1Div.setAttribute("class","activeBlue")
+
+
 let player = player1;
 
-const checkForWinner = (player, counter) => {
+const checkForWinner = (player) => {
     let sigel = player.sigel;
     
     switch (true) {
@@ -97,6 +109,7 @@ const checkForWinner = (player, counter) => {
             sq3.innerText === sigel
         ):
             console.log(`${sigel} WINS!`);
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -105,6 +118,7 @@ const checkForWinner = (player, counter) => {
             sq4.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -113,6 +127,7 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -121,6 +136,7 @@ const checkForWinner = (player, counter) => {
             sq7.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -129,6 +145,7 @@ const checkForWinner = (player, counter) => {
             sq8.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -137,6 +154,7 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -145,6 +163,7 @@ const checkForWinner = (player, counter) => {
             sq7.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (
@@ -153,15 +172,19 @@ const checkForWinner = (player, counter) => {
             sq9.innerText === sigel
         ):
             console.log(`${sigel} WINS!!!!`)
+            takeTurns();
             gameEnd(player);
             break;
         case (sq1.innerText !== '' && sq2.innerText !== '' && sq3.innerText !== '' && 
-        sq4.innerText !== '' && sq5.innerText !== '' && sq6.innerText !== '' && 
-        sq7.innerText !== '' && sq8.innerText !== '' && sq9.innerText !== ''):
+            sq4.innerText !== '' && sq5.innerText !== '' && sq6.innerText !== '' && 
+            sq7.innerText !== '' && sq8.innerText !== '' && sq9.innerText !== ''):
             console.log("DRAW");
+            takeTurns();
             gameEnd('Draw');
             break;
         default:
+            takeTurns();
+            break;
     }
 }
 
@@ -176,9 +199,16 @@ const gameClick = (sqr) => {
 }
 
 const takeTurns = () => {
-    console.log(`${player.sigel} : ${counter}`)
-    counter++;
-    player = counter%2 === 0 ? player2 : player1;
+    console.log(`${player.sigel} : ${turnCounter}`)
+    turnCounter++;
+    player = turnCounter%2 === 0 ? player2 : player1;
+    if (turnCounter%2 === 0) {
+        p1Div.setAttribute("class", "player-div");
+        p2Div.setAttribute("class", "activeRed");
+    } else {
+        p1Div.setAttribute("class", "activeBlue");
+        p2Div.setAttribute("class", "player-div");
+    }
     
 
 }
@@ -186,8 +216,7 @@ const takeTurns = () => {
 sq1.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq1)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 
 })
@@ -195,63 +224,55 @@ sq1.addEventListener("click", () => {
 sq2.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq2)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq3.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq3)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq4.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq4)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq5.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq5)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq6.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq6)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq7.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq7)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq8.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq8)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })
 
 sq9.addEventListener("click", () => {
     if (playOn) {
         gameClick(sq9)
-        checkForWinner(player, counter);
-        takeTurns()
+        checkForWinner(player, turnCounter);
     }
 })

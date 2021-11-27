@@ -94,3 +94,31 @@
     grid-column: 7 / 9;
     grid-row: 7 / 9;
 }
+
+
+#status {
+ display: flex;
+ flex-direction: row;
+ justify-content: space-around;
+ font-family: 'Revalia', cursive;
+ font-size: 1REM;
+ padding: 1REM;
+}
+
+.player-div, .activeBlue, .activeRed {
+    padding: 1REM;
+    margin: auto;
+}
+
+.player-div {
+    border: 5px black solid;
+    padding: 1REM;
+}
+
+.activeRed {
+    border: 5px red solid;
+}
+
+.activeBlue {
+    border: 5px blue solid;
+}
