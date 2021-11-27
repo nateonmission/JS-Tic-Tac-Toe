@@ -1,3 +1,4 @@
+let playOn = true;
 const sq1 = document.querySelector("#sq1");
 const sq2 = document.querySelector("#sq2");
 const sq3 = document.querySelector("#sq3");
@@ -37,8 +38,6 @@ const clearBoard = () => {
     sq7.innerText = '';
     sq8.innerText = '';
     sq9.innerText = '';
-    counter = 0;
-
 } 
 
 gameCounter = 0;
@@ -51,6 +50,8 @@ const gameEnd = (player) => {
 
         if (playAgain === 'y' || playAgain === 'yes') {
             clearBoard();
+        } else {
+            playOn = false;
         }
     } else {
         gameCounter++;
@@ -62,6 +63,8 @@ const gameEnd = (player) => {
 
         if (playAgain === 'y' || playAgain === 'yes') {
             clearBoard();
+        } else {
+            playOn = false;
         }
     }
 }
@@ -152,7 +155,9 @@ const checkForWinner = (player, counter) => {
             console.log(`${sigel} WINS!!!!`)
             gameEnd(player);
             break;
-        case (counter === 9):
+        case (sq1.innerText !== '' && sq2.innerText !== '' && sq3.innerText !== '' && 
+        sq4.innerText !== '' && sq5.innerText !== '' && sq6.innerText !== '' && 
+        sq7.innerText !== '' && sq8.innerText !== '' && sq9.innerText !== ''):
             console.log("DRAW");
             gameEnd('Draw');
             break;
@@ -179,56 +184,74 @@ const takeTurns = () => {
 }
 
 sq1.addEventListener("click", () => {
-    gameClick(sq1)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq1)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 
 })
 
 sq2.addEventListener("click", () => {
-    gameClick(sq2)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq2)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq3.addEventListener("click", () => {
-    gameClick(sq3)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq3)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq4.addEventListener("click", () => {
-    gameClick(sq4)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq4)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq5.addEventListener("click", () => {
-    gameClick(sq5)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq5)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq6.addEventListener("click", () => {
-    gameClick(sq6)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq6)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq7.addEventListener("click", () => {
-    gameClick(sq7)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq7)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq8.addEventListener("click", () => {
-    gameClick(sq8)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq8)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
 
 sq9.addEventListener("click", () => {
-    gameClick(sq9)
-    checkForWinner(player, counter);
-    takeTurns()
+    if (playOn) {
+        gameClick(sq9)
+        checkForWinner(player, counter);
+        takeTurns()
+    }
 })
