@@ -7,7 +7,19 @@
     font-family: 'Revalia', cursive;
     font-size: 4REM;
     text-align: center;
+    color: black;
+    
 }
+
+/* #banner {
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    to {
+        text-shadow: 0 0 10px green;
+    }
+} */
 
 
 #game-board {
@@ -21,11 +33,13 @@
 .red {
     color: red;
     background-color: white;
+    text-shadow: 0 0 10px;
 }
 
 .blue {
     color: blue;
     background-color: white;
+    text-shadow: 0 0 10px;
 }
 
 #game-board {
@@ -40,7 +54,7 @@
 
 #sq1, #sq2, #sq3, 
 #sq4, #sq5, #sq6, 
-#sq7,#sq8, #sq9 {
+#sq7,#sq8, #sq0 {
     width: 100px;
     height: 100px;
     text-align: center;
@@ -50,47 +64,47 @@
 }
 
 
-#sq1 {
+#sq0 {
     grid-column: 1 / 3;
+    grid-row: 1 / 3;
+}
+
+#sq1 {
+    grid-column: 4 / 6;
     grid-row: 1 / 3;
 }
 
 #sq2 {
-    grid-column: 4 / 6;
+    grid-column: 7 / 9;
     grid-row: 1 / 3;
 }
 
 #sq3 {
-    grid-column: 7 / 9;
-    grid-row: 1 / 3;
+    grid-column: 1 / 3;
+    grid-row: 4 / 6;
 }
 
 #sq4 {
-    grid-column: 1 / 3;
+    grid-column: 4 / 6;
     grid-row: 4 / 6;
 }
 
 #sq5 {
-    grid-column: 4 / 6;
-    grid-row: 4 / 6;
-}
-
-#sq6 {
     grid-column: 7 / 9;
     grid-row: 4 / 6;
 }
 
-#sq7 {
+#sq6 {
     grid-column: 1 / 3;
     grid-row: 7 / 9;
 }
 
-#sq8 {
+#sq7 {
     grid-column: 4 / 6;
     grid-row: 7 / 9;
 }
 
-#sq9 {
+#sq8 {
     grid-column: 7 / 9;
     grid-row: 7 / 9;
 }
@@ -122,3 +136,8 @@
 .activeBlue {
     border: 5px blue solid;
 }
+
+
+
+
+
