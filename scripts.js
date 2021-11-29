@@ -1,10 +1,12 @@
+
+// Initialize Game Variables
 let playOn = true;
 let gameHistory = [];
 let gameCounter = 0;
 let turnCounter = 1;
-let availableMoves = [true, true, true, true, true, true, true, true, true];
 
 
+// Grab DOM Componants
 const gb = document.querySelector("#game-board");
 const sq0 = document.querySelector("#sq0");
 const sq1 = document.querySelector("#sq1");
@@ -16,23 +18,36 @@ const sq6 = document.querySelector("#sq6");
 const sq7 = document.querySelector("#sq7");
 const sq8 = document.querySelector("#sq8");
 const statusArea = document.querySelector("#status")
+
+// Initialize Arrays of DOM Componants
 let squares = [sq0, sq1, sq2, sq3, sq4, sq5, sq6, sq7, sq8];
+let availableMoves = [true, true, true, true, true, true, true, true, true];
 
 
+// Define Player Class
 class Player {
     constructor (sigel, name) {
         this.sigel = sigel;
         this.name = name;
+        this.computer = name.toLowerCase() === 'computer' ? true: false;
         this.wins = 0;
         this.color = sigel === 'X' ? 'blue' : 'red'
     }
 
-    getSigel() {
-        return this.sigel
+    makeMove(location){
+        let sqr = squares[location]
+        if(sqr.innerText === ''){
+            sqr.setAttribute("class",`${this.color}`);
+            sqr.innerHTML = `${this.sigel}`;
+            availableMoves[location] = false;
+        } else {
+            throw "already clicked"
+        }
     }
 }
 
 
+// Define Game Functions
 const clearBoard = () => {
     sq1.innerText = '';
     sq2.innerText = '';
@@ -87,6 +102,8 @@ const buildScoreBoard = (player) => {
 }
 
 
+
+// Instatiate Players and Build the Scoreboard
 let p1Name = prompt("Player 1 with be Xs. What is your name? ");
 let p2Name = prompt("Player 2 with be Os. What is your name? ");
 
@@ -101,12 +118,12 @@ const p1Div = document.querySelector("#X");
 const p2Div = document.querySelector("#O");
 p1Div.setAttribute("class","activeBlue")
 
-
 let player = player1;
 
+// Define Logic that needs Player Information
 const checkForWinner = (player) => {
     let sigel = player.sigel;
-    console.log(availableMoves)
+    console.log(`avaiable: ${availableMoves}`)
     switch (true) {
         case (
             sq0.innerText === sq1.innerText &&
@@ -163,20 +180,9 @@ const checkForWinner = (player) => {
             
         default:
             return null;
-            
     }
 }
 
-const gameClick = (sqr, spot) => {
-    if(sqr.innerText === ''){
-        let sigel = player.getSigel()
-        sqr.setAttribute("class",`${player.color}`);
-        sqr.innerHTML = `${sigel}`;
-        availableMoves[spot] = false;
-    } else {
-        throw "already clicked"
-    }
-}
 
 const takeTurns = () => {
     console.log(`${player.sigel} : ${turnCounter}`)
@@ -193,76 +199,84 @@ const takeTurns = () => {
 
 
 
+// Computer Player Logic
+const minMax = (player, copyAvailableMoves, depth, isMax) => {
+    
+    return 1;
+}
 
 const aiPlayer = (squares, availableMoves, player) => {
     let otherPlayer = player === player1 ? player2 : player1;
+    let copyAvailableMoves = availableMoves;
+    let move;
 
-    for (let i = 0; i < squares.length; i++){
-        if (availableMoves[i]) {
-
-            squares[i].click();
-
-        }
+    if (availableMoves.every(true)) {
+        move = Math.floor(Math.random() * availableMoves.length);
+        squares[move].click();
+    } else {
+        move = miniMax(copyAvailableMoves, player, otherPlayer);
+        squares[move].click();
     }
 }
 
 
 
-
+// Event Listeners for Squares
 sq0.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq0, 0)
+        player.makeMove(0);
     }
 })
 
 sq1.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq1, 1)
+        player.makeMove(1);
     }
 })
 
 sq2.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq2, 2)
+        player.makeMove(2);
     }
 })
 
 sq3.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq3, 3)
+        player.makeMove(3);
     }
 })
 
 sq4.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq4, 4)
+        player.makeMove(4);
     }
 })
 
 sq5.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq5, 5)
+        player.makeMove(5);
     }
 })
 
 sq6.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq6, 6)
+        player.makeMove(6);
     }
 })
 
 sq7.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq7, 7)
+        player.makeMove(7);
     }
 })
 
 sq8.addEventListener("click", () => {
     if (playOn) {
-        gameClick(sq8, 8)
+        player.makeMove(8);
     }
 })
 
+// Gameboard Listener for Managing Game Logic
 gb.addEventListener("click", () => {
     if(playOn){
         console.log('gb')
@@ -280,7 +294,7 @@ gb.addEventListener("click", () => {
             takeTurns();
         }
 
-        if (player.name === "Computer") {
+        if (player.computer === true) {
             aiPlayer(squares, availableMoves, player);
         }
 
