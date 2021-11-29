@@ -29,7 +29,7 @@ class Player {
     constructor (sigel, name) {
         this.sigel = sigel;
         this.name = name;
-        this.computer = name.toLowerCase() === 'computer' ? true: false;
+        this.isComputer = name.toLowerCase() === 'computer' ? true: false;
         this.wins = 0;
         this.color = sigel === 'X' ? 'blue' : 'red'
     }
@@ -40,6 +40,8 @@ class Player {
             sqr.setAttribute("class",`${this.color}`);
             sqr.innerHTML = `${this.sigel}`;
             availableMoves[location] = false;
+            console.log(`${player.sigel} : ${turnCounter}`)
+            turnCounter++;
         } else {
             throw "already clicked"
         }
@@ -88,8 +90,8 @@ const gameEnd = (player) => {
             playOn = false;
         }
     }
-    p1Div.innerText = `${player1.sigel}s played by ${player1.name} >> ${player1.wins} games won`
-    p2Div.innerText = `${player2.sigel}s played by ${player2.name} >> ${player2.wins} games won`
+    p1Div.innerHTML = `${player1.sigel}s = ${player1.name} <br> ${player1.wins} games won`
+    p2Div.innerHTML = `${player2.sigel}s = ${player2.name} <br> ${player2.wins} games won`
 }
 
 
@@ -98,7 +100,7 @@ const buildScoreBoard = (player) => {
     playerDiv.setAttribute("id",player.sigel);
     playerDiv.setAttribute("class", "player-div");
     statusArea.append(playerDiv);
-    playerDiv.innerText = `${player.sigel}s >> ${player.name} >> ${player.wins} games won`
+    playerDiv.innerHTML = `${player.sigel}s = ${player.name} <br> ${player.wins} games won`
 }
 
 
@@ -123,7 +125,7 @@ let player = player1;
 // Define Logic that needs Player Information
 const checkForWinner = (player) => {
     let sigel = player.sigel;
-    console.log(`avaiable: ${availableMoves}`)
+    //console.log(`avaiable: ${availableMoves}`)
     switch (true) {
         case (
             sq0.innerText === sq1.innerText &&
@@ -185,8 +187,6 @@ const checkForWinner = (player) => {
 
 
 const takeTurns = () => {
-    console.log(`${player.sigel} : ${turnCounter}`)
-    turnCounter++;
     player = turnCounter%2 === 0 ? player2 : player1;
     if (turnCounter%2 === 0) {
         p1Div.setAttribute("class", "player-div");
@@ -279,8 +279,8 @@ sq8.addEventListener("click", () => {
 // Gameboard Listener for Managing Game Logic
 gb.addEventListener("click", () => {
     if(playOn){
-        console.log('gb')
-        let gameEnded = checkForWinner(player, turnCounter);
+        
+        let gameEnded = checkForWinner(player);
 
         if (gameEnded === null){
             takeTurns();
@@ -294,7 +294,7 @@ gb.addEventListener("click", () => {
             takeTurns();
         }
 
-        if (player.computer === true) {
+        if (player.isComputer === true) {
             aiPlayer(squares, availableMoves, player);
         }
 

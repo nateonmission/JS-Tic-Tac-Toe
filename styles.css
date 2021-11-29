@@ -122,19 +122,24 @@
 .player-div, .activeBlue, .activeRed {
     padding: 1REM;
     margin: auto;
+    font-size: 2REM;
 }
 
 .player-div {
     border: 5px black solid;
     padding: 1REM;
+    
 }
 
 .activeRed {
     border: 5px red solid;
+    color: red;
+    
 }
 
 .activeBlue {
     border: 5px blue solid;
+    color: blue;
 }
 
 
