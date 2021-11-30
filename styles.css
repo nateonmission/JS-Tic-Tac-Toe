@@ -148,11 +148,13 @@
     color: blue;
 }
 
+#play-again-btn {
+    margin: 0 auto;
+}
 
 
 
-
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
     @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap');
 
     #banner {
@@ -178,7 +180,7 @@
 
     .player-div, .activeBlue, .activeRed {
         font-family: 'PT Sans Narrow', sans-serif;
-        font-size: 1REM;
+        font-size: 1.5REM;
     }
 
     #game-board {

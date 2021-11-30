@@ -1,12 +1,12 @@
 
 // Initialize Game Variables
 let playOn = true;
-let gameHistory = [];
 let gameCounter = 0;
 let turnCounter = 1;
 
 
 // Grab DOM Componants
+const gameContainer = document.querySelector("#game-container");
 const gb = document.querySelector("#game-board");
 const sq0 = document.querySelector("#sq0");
 const sq1 = document.querySelector("#sq1");
@@ -64,7 +64,25 @@ const clearBoard = () => {
     sq0.innerText = '';
     availableMoves = [true, true, true, true, true, true, true, true, true];
     moveHistory = ['', '', '', '', '', '', '', '', ''];
+    
 } 
+
+const newMatch = () => {
+    p1Div.remove();
+    p2Div.remove();
+    clearBoard();
+    gameCounter = 0;
+    turnCounter = 1;
+    playOn = true;
+    playAgainBtn.style.display = "none";
+    buildPlayers();
+    
+    p1Div = document.querySelector("#X");
+    p2Div = document.querySelector("#O");
+    p1Div.setAttribute("class","activeBlue")
+    player = player1;
+    gb.setAttribute("class","game-board-blue");
+}
 
 
 const gameEnd = (player) => {
@@ -79,7 +97,10 @@ const gameEnd = (player) => {
             clearBoard();
         } else {
             playOn = false;
-            console.log(`Total games played: ${gameCounter}`)
+            console.log(`Total games played: ${gameCounter}`);
+
+            playAgainBtn.style.display = "block";
+
         }
     } else {
         player.wins++;
@@ -94,6 +115,9 @@ const gameEnd = (player) => {
         } else {
             playOn = false;
             console.log(`Total games played: ${gameCounter}`)
+
+            playAgainBtn.style.display = "block";
+
         }
     }
     p1Div.innerHTML = `${player1.sigel}s = ${player1.name} <br> ${player1.wins} games won`
@@ -112,22 +136,40 @@ const buildScoreBoard = (player) => {
 
 
 // Instatiate Players and Build the Scoreboard
-let p1Name = prompt("Player 1 with be Xs. What is your name? ");
-let p2Name = prompt("Player 2 with be Os. What is your name? [type COMPUTER for an automated opponent] ");
 
-const player1 = new Player('X', p1Name);
-buildScoreBoard(player1);
+let p1Name;
+let p2Name;
+let player1;
+let player2;
 
-const player2 = new Player('O', p2Name);
-buildScoreBoard(player2);
+const buildPlayers = () => {
+    p1Name = prompt("Player 1 with be Xs. What is your name? ").trim();
+    p2Name = prompt("Player 2 with be Os. What is your name? [type COMPUTER for an automated opponent] ").trim();
 
-const p1Div = document.querySelector("#X");
-const p2Div = document.querySelector("#O");
+    player1 = new Player('X', p1Name);
+    buildScoreBoard(player1);
+
+    player2 = new Player('O', p2Name);
+    buildScoreBoard(player2);
+}
+
+buildPlayers();
+let p1Div = document.querySelector("#X");
+let p2Div = document.querySelector("#O");
 p1Div.setAttribute("class","activeBlue")
 
 let player = player1;
 gb.setAttribute("class","game-board-blue");
 
+
+// Creates button for a new match after players have exited prev match.
+const playAgainBtn = document.createElement('button');
+playAgainBtn.setAttribute("type", "button");
+playAgainBtn.setAttribute("id", "play-again-btn");
+playAgainBtn.style.display = "none";
+playAgainBtn.innerText = "Another Match?";
+playAgainBtn.addEventListener("click", newMatch);
+gameContainer.append(playAgainBtn)
 
 // Define Functions that needs Player Information
 const checkForWinner = (moveHistory) => {
@@ -257,7 +299,7 @@ const aiPlayer = (availableMoves, moveHistory, player) => {
     let availableMovesCopy = availableMoves;
 
     for (let i = 0; i < moveHistory.length; i++) {
-        if (availableMoves[i]) {
+        if (availableMovesCopy[i]) {
             historyCopy[i] = player.sigel;
             availableMovesCopy[i] = false;
             let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
