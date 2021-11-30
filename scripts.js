@@ -51,7 +51,7 @@ class Player {
 }
 
 
-// Define Game Functions
+// Define Various Game Functions
 const clearBoard = () => {
     sq1.innerText = '';
     sq2.innerText = '';
@@ -68,6 +68,7 @@ const clearBoard = () => {
 
 
 const gameEnd = (player) => {
+    gameCounter++
     if (player === "Draw") {
         let playAgain = prompt(`
         Nobody WINS! It's a DRAW!
@@ -78,9 +79,9 @@ const gameEnd = (player) => {
             clearBoard();
         } else {
             playOn = false;
+            console.log(`Total games played: ${gameCounter}`)
         }
     } else {
-        gameCounter++;
         player.wins++;
 
         let playAgain = prompt(`
@@ -92,6 +93,7 @@ const gameEnd = (player) => {
             clearBoard();
         } else {
             playOn = false;
+            console.log(`Total games played: ${gameCounter}`)
         }
     }
     p1Div.innerHTML = `${player1.sigel}s = ${player1.name} <br> ${player1.wins} games won`
@@ -119,14 +121,15 @@ buildScoreBoard(player1);
 const player2 = new Player('O', p2Name);
 buildScoreBoard(player2);
 
-
 const p1Div = document.querySelector("#X");
 const p2Div = document.querySelector("#O");
 p1Div.setAttribute("class","activeBlue")
 
 let player = player1;
+gb.setAttribute("class","game-board-blue");
 
-// Define Logic that needs Player Information
+
+// Define Functions that needs Player Information
 const checkForWinner = (moveHistory) => {
     switch (true) {
         case (
@@ -191,9 +194,11 @@ const takeTurns = () => {
     if (turnCounter%2 === 0) {
         p1Div.setAttribute("class", "player-div");
         p2Div.setAttribute("class", "activeRed");
+        gb.setAttribute("class","game-board-red");
     } else {
         p1Div.setAttribute("class", "activeBlue");
         p2Div.setAttribute("class", "player-div");
+        gb.setAttribute("class","game-board-blue");
     }
 }
 
@@ -201,18 +206,15 @@ const takeTurns = () => {
 // Computer Player Logic
 const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
     let isWinner = checkForWinner(historyCopy);
-    console.log(`history ${historyCopy}`)
-
     let opponent = player.sigel === 'O' ? player1 : player2;
     
     if (isWinner !== null) {
-        console.log(`isWinnder ${isWinner}`)
         return isWinner;
     }
 
     if (isMax) {
         let bestMoveScore = -Infinity;
-        for (let i = 0; i < moveHistory.length; i++) {
+        for (let i = moveHistory.length; i >= 0; i--) {
             if (availableMovesCopy[i]) {
                 historyCopy[i] = player.sigel;
                 availableMovesCopy[i] = false;
@@ -225,11 +227,10 @@ const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
                 }
             }
         }
-        console.log(bestMoveScore)
         return bestMoveScore;
     } else {
         let bestMoveScore = Infinity;
-        for (let i = 0; i < moveHistory.length; i++) {
+        for (let i = moveHistory.length-1; i >=0 ; i--) {
             if (availableMovesCopy[i]) {
                 historyCopy[i] = opponent.sigel;
                 availableMovesCopy[i] = false;
@@ -242,46 +243,34 @@ const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
                 }
             }
         }
-        console.log(bestMoveScore)
         return bestMoveScore;
     }
 }
 
+
 const aiPlayer = (availableMoves, moveHistory, player) => {
     console.log('aiPlayer called')
-    // if (availableMoves.reduce( (acc, b) => acc + b) >= 8) {  // adjust random vs minimax
-    //     let move = false;
-    //     let index;
-    //     while(!move) {
-    //         index = Math.floor(Math.random()*availableMoves.length);
-    //         move = availableMoves[index];
-    //     }
-    //     player.makeMove(index);
 
+    let bestMoveScore = -Infinity;
+    let move;
+    let historyCopy = moveHistory;
+    let availableMovesCopy = availableMoves;
 
-    //} else {
-
-        let bestMoveScore = -Infinity;
-        let move;
-        let historyCopy = moveHistory;
-        let availableMovesCopy = availableMoves;
-    
-        for (let i = 0; i < moveHistory.length; i++) {
-            if (availableMoves[i]) {
-                historyCopy[i] = player.sigel;
-                availableMovesCopy[i] = false;
-                let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
-                historyCopy[i] = '';
-                availableMovesCopy[i] = true;
-                if (moveScore > bestMoveScore) {
-                    bestMoveScore = moveScore;
-                    move = i;
-                }
+    for (let i = 0; i < moveHistory.length; i++) {
+        if (availableMoves[i]) {
+            historyCopy[i] = player.sigel;
+            availableMovesCopy[i] = false;
+            let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
+            historyCopy[i] = '';
+            availableMovesCopy[i] = true;
+            if (moveScore > bestMoveScore) {
+                bestMoveScore = moveScore;
+                move = i;
             }
         }
-        player.makeMove(move)
     }
-//}
+    player.makeMove(move)
+}
 
 
 // Check State to see if there's a winner
@@ -308,49 +297,41 @@ sq0.addEventListener("click", () => {
         player.makeMove(0);
     }
 })
-
 sq1.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(1);
     }
 })
-
 sq2.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(2);
     }
 })
-
 sq3.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(3);
     }
 })
-
 sq4.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(4);
     }
 })
-
 sq5.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(5);
     }
 })
-
 sq6.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(6);
     }
 })
-
 sq7.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(7);
     }
 })
-
 sq8.addEventListener("click", () => {
     if (playOn) {
         player.makeMove(8);
