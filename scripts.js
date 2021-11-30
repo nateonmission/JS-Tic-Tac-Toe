@@ -22,6 +22,7 @@ const statusArea = document.querySelector("#status")
 // Initialize Arrays of DOM Componants
 let squares = [sq0, sq1, sq2, sq3, sq4, sq5, sq6, sq7, sq8];
 let availableMoves = [true, true, true, true, true, true, true, true, true];
+let moveHistory = ['', '', '', '', '', '', '', '', ''];
 
 
 // Define Player Class
@@ -40,7 +41,8 @@ class Player {
             sqr.setAttribute("class",`${this.color}`);
             sqr.innerHTML = `${this.sigel}`;
             availableMoves[location] = false;
-            console.log(`${player.sigel} : ${turnCounter}`)
+            moveHistory[location] = this.sigel;
+            console.log(`${player.sigel} : ${turnCounter}`);
             turnCounter++;
         } else {
             throw "already clicked"
@@ -61,6 +63,7 @@ const clearBoard = () => {
     sq8.innerText = '';
     sq0.innerText = '';
     availableMoves = [true, true, true, true, true, true, true, true, true];
+    moveHistory = ['', '', '', '', '', '', '', '', ''];
 } 
 
 
@@ -79,6 +82,7 @@ const gameEnd = (player) => {
     } else {
         gameCounter++;
         player.wins++;
+
         let playAgain = prompt(`
         ${player.name} WINS!
         Do y'all want to play again! (y/n)
@@ -107,13 +111,13 @@ const buildScoreBoard = (player) => {
 
 // Instatiate Players and Build the Scoreboard
 let p1Name = prompt("Player 1 with be Xs. What is your name? ");
-let p2Name = prompt("Player 2 with be Os. What is your name? ");
+let p2Name = prompt("Player 2 with be Os. What is your name? [type COMPUTER for an automated opponent] ");
 
 const player1 = new Player('X', p1Name);
-buildScoreBoard(player1)
+buildScoreBoard(player1);
 
 const player2 = new Player('O', p2Name);
-buildScoreBoard(player2)
+buildScoreBoard(player2);
 
 
 const p1Div = document.querySelector("#X");
@@ -123,61 +127,57 @@ p1Div.setAttribute("class","activeBlue")
 let player = player1;
 
 // Define Logic that needs Player Information
-const checkForWinner = (player) => {
-    let sigel = player.sigel;
-    //console.log(`avaiable: ${availableMoves}`)
+const checkForWinner = (moveHistory) => {
     switch (true) {
         case (
-            sq0.innerText === sq1.innerText &&
-            sq1.innerText === sq2.innerText &&
-            sq2.innerText === sigel
+            moveHistory[0] === moveHistory[1] &&
+            moveHistory[1] === moveHistory[2] &&
+            moveHistory [0] !== ''
         ):
-            return 1;
+            return (moveHistory [0] === 'X' ? 1 : -1);
         case (
-            sq3.innerText === sq4.innerText &&
-            sq4.innerText === sq5.innerText &&
-            sq5.innerText === sigel
+            moveHistory[3] === moveHistory[4] &&
+            moveHistory[4] === moveHistory[5] &&
+            moveHistory [3] !== '' 
         ):
-            return 1;
+            return (moveHistory [3] === 'X' ? 1 : -1);
         case (
-            sq6.innerText === sq7.innerText &&
-            sq7.innerText === sq8.innerText &&
-            sq8.innerText === sigel
+            moveHistory[6] === moveHistory[7] &&
+            moveHistory[7] === moveHistory[8] &&
+            moveHistory [6] !== ''
         ):
-            return 1;
+            return (moveHistory [6] === 'X' ? 1 : -1);
         case (
-            sq0.innerText === sq3.innerText &&
-            sq3.innerText === sq6.innerText &&
-            sq6.innerText === sigel
+            moveHistory[0] === moveHistory[3] &&
+            moveHistory[3] === moveHistory[6] &&
+            moveHistory [0] !== ''
         ):
-            return 1;
+            return (moveHistory [0] === 'X' ? 1 : -1);
         case (
-            sq1.innerText === sq4.innerText &&
-            sq4.innerText === sq7.innerText &&
-            sq7.innerText === sigel
+            moveHistory[1] === moveHistory[4] &&
+            moveHistory[4] === moveHistory[7] &&
+            moveHistory [1] !== ''
         ):
-            return 1;
+            return (moveHistory [1] === 'X' ? 1 : -1);
         case (
-            sq2.innerText === sq5.innerText &&
-            sq5.innerText === sq8.innerText &&
-            sq8.innerText === sigel
+            moveHistory[2] === moveHistory[5] &&
+            moveHistory[5] === moveHistory[8]  &&
+            moveHistory [2] !== ''
         ):
-            return 1;
+            return (moveHistory [2] === 'X' ? 1 : -1);
         case (
-            sq2.innerText === sq4.innerText &&
-            sq4.innerText === sq6.innerText &&
-            sq6.innerText === sigel
+            moveHistory[2] === moveHistory[4] &&
+            moveHistory[4] === moveHistory[6] &&
+            moveHistory [2] !== ''
         ):
-            return 1;
+            return (moveHistory [2] === 'X' ? 1 : -1);
         case (
-            sq0.innerText === sq4.innerText &&
-            sq4.innerText === sq8.innerText &&
-            sq8.innerText === sigel
+            moveHistory[0] === moveHistory[4] &&
+            moveHistory[4] === moveHistory[8] &&
+            moveHistory [0] !== ''
         ):
-            return 1;
-        case (sq0.innerHTM !== '' && sq1.innerText !== '' && sq2.innerText !== '' && 
-            sq3.innerText !== '' && sq4.innerText !== '' && sq5.innerText !== '' && 
-            sq6.innerText !== '' && sq7.innerText !== '' && sq8.innerText !== ''):
+            return (moveHistory [0] === 'X' ? 1 : -1);
+        case (!moveHistory.some( element => (element === ''))):
             return 0;
             
         default:
@@ -198,27 +198,108 @@ const takeTurns = () => {
 }
 
 
-
 // Computer Player Logic
-const minMax = (player, copyAvailableMoves, depth, isMax) => {
+const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
+    let isWinner = checkForWinner(historyCopy);
+    console.log(`history ${historyCopy}`)
+
+    let opponent = player.sigel === 'O' ? player1 : player2;
     
-    return 1;
-}
+    if (isWinner !== null) {
+        console.log(`isWinnder ${isWinner}`)
+        return isWinner;
+    }
 
-const aiPlayer = (squares, availableMoves, player) => {
-    let otherPlayer = player === player1 ? player2 : player1;
-    let copyAvailableMoves = availableMoves;
-    let move;
-
-    if (availableMoves.every(true)) {
-        move = Math.floor(Math.random() * availableMoves.length);
-        squares[move].click();
+    if (isMax) {
+        let bestMoveScore = -Infinity;
+        for (let i = 0; i < moveHistory.length; i++) {
+            if (availableMovesCopy[i]) {
+                historyCopy[i] = player.sigel;
+                availableMovesCopy[i] = false;
+                let moveScore = minMax(historyCopy, (depth + 1), false);
+                historyCopy[i] = '';
+                availableMovesCopy[i] = true;
+                if (moveScore > bestMoveScore) {
+                    bestMoveScore = moveScore;
+                    move = i;
+                }
+            }
+        }
+        console.log(bestMoveScore)
+        return bestMoveScore;
     } else {
-        move = miniMax(copyAvailableMoves, player, otherPlayer);
-        squares[move].click();
+        let bestMoveScore = Infinity;
+        for (let i = 0; i < moveHistory.length; i++) {
+            if (availableMovesCopy[i]) {
+                historyCopy[i] = opponent.sigel;
+                availableMovesCopy[i] = false;
+                let moveScore = minMax(historyCopy, (depth + 1), true);
+                historyCopy[i] = '';
+                availableMovesCopy[i] = true;
+                if (moveScore < bestMoveScore) {
+                    bestMoveScore = moveScore;
+                    move = i;
+                }
+            }
+        }
+        console.log(bestMoveScore)
+        return bestMoveScore;
     }
 }
 
+const aiPlayer = (availableMoves, moveHistory, player) => {
+    console.log('aiPlayer called')
+    // if (availableMoves.reduce( (acc, b) => acc + b) >= 8) {  // adjust random vs minimax
+    //     let move = false;
+    //     let index;
+    //     while(!move) {
+    //         index = Math.floor(Math.random()*availableMoves.length);
+    //         move = availableMoves[index];
+    //     }
+    //     player.makeMove(index);
+
+
+    //} else {
+
+        let bestMoveScore = -Infinity;
+        let move;
+        let historyCopy = moveHistory;
+        let availableMovesCopy = availableMoves;
+    
+        for (let i = 0; i < moveHistory.length; i++) {
+            if (availableMoves[i]) {
+                historyCopy[i] = player.sigel;
+                availableMovesCopy[i] = false;
+                let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
+                historyCopy[i] = '';
+                availableMovesCopy[i] = true;
+                if (moveScore > bestMoveScore) {
+                    bestMoveScore = moveScore;
+                    move = i;
+                }
+            }
+        }
+        player.makeMove(move)
+    }
+//}
+
+
+// Check State to see if there's a winner
+const checkGameState = () => {
+    let gameEnded = checkForWinner(moveHistory);
+
+    if (gameEnded === null){
+        takeTurns();
+    } else if (gameEnded === 0) {
+            console.log("DRAW");
+            gameEnd('Draw');
+            takeTurns();
+    } else if (gameEnded === 1 || gameEnded === -1) {
+        console.log(`${player.sigel} WINS!!!!`)
+        gameEnd(player);
+        takeTurns();
+    }
+}
 
 
 // Event Listeners for Squares
@@ -280,32 +361,12 @@ sq8.addEventListener("click", () => {
 gb.addEventListener("click", () => {
     if(playOn){
         
-        let gameEnded = checkForWinner(player);
+        checkGameState()
 
-        if (gameEnded === null){
-            takeTurns();
-        } else if (gameEnded === 0) {
-                console.log("DRAW");
-                gameEnd('Draw');
-                takeTurns();
-        } else if (gameEnded === 1) {
-            console.log(`${player.sigel} WINS!!!!`)
-            gameEnd(player);
-            takeTurns();
+        if (player.isComputer === true && playOn) {
+            aiPlayer(availableMoves, moveHistory, player);
+            checkGameState();
         }
-
-        if (player.isComputer === true) {
-            aiPlayer(squares, availableMoves, player);
-        }
-
-        // let i = 0;
-        // squares.forEach( sq => {
-        //     if (sq.innerText === '') {
-        //         console.log(`${i}`);
-                
-        //     }
-        //     i++
-        // })
     }
 }, false)
 
