@@ -52,6 +52,8 @@ class Player {
 
 
 // Define Various Game Functions
+
+// New Game Same Match
 const clearBoard = () => {
     sq1.innerText = '';
     sq2.innerText = '';
@@ -67,6 +69,7 @@ const clearBoard = () => {
     
 } 
 
+// For New Match with New Players
 const newMatch = () => {
     p1Div.remove();
     p2Div.remove();
@@ -98,9 +101,7 @@ const gameEnd = (player) => {
         } else {
             playOn = false;
             console.log(`Total games played: ${gameCounter}`);
-
             playAgainBtn.style.display = "block";
-
         }
     } else {
         player.wins++;
@@ -115,9 +116,7 @@ const gameEnd = (player) => {
         } else {
             playOn = false;
             console.log(`Total games played: ${gameCounter}`)
-
             playAgainBtn.style.display = "block";
-
         }
     }
     p1Div.innerHTML = `${player1.sigel}s = ${player1.name} <br> ${player1.wins} games won`
@@ -136,7 +135,6 @@ const buildScoreBoard = (player) => {
 
 
 // Instatiate Players and Build the Scoreboard
-
 let p1Name;
 let p2Name;
 let player1;
@@ -170,6 +168,7 @@ playAgainBtn.style.display = "none";
 playAgainBtn.innerText = "Another Match?";
 playAgainBtn.addEventListener("click", newMatch);
 gameContainer.append(playAgainBtn)
+
 
 // Define Functions that needs Player Information
 const checkForWinner = (moveHistory) => {
@@ -246,73 +245,151 @@ const takeTurns = () => {
 
 
 // Computer Player Logic
-const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
-    let isWinner = checkForWinner(historyCopy);
-    let opponent = player.sigel === 'O' ? player1 : player2;
-    
-    if (isWinner !== null) {
-        return isWinner;
+// const minMax = (historyCopy, availableMovesCopy, depth, isMax) => {
+//     let opponent = player.sigel === 'O' ? player1 : player2;
+
+//     let isWinner = checkForWinner(historyCopy);
+//     if (isWinner !== null) {
+//         return isWinner * 10;
+//     }
+
+//     if (isMax) {
+//         let bestMoveScore = -Infinity;
+//         for (let i = historyCopy.length - 1; i >= 0; i--) {
+//             if (availableMovesCopy[i]) {
+//                 historyCopy[i] = player.sigel;
+//                 availableMovesCopy[i] = false;
+//                 let moveScore = minMax(historyCopy, availableMovesCopy, (depth + 1), false);
+//                 historyCopy[i] = '';
+//                 availableMovesCopy[i] = true;
+//                 if (moveScore > bestMoveScore) {
+//                     bestMoveScore = moveScore;
+//                 }
+//             }
+//         }
+//         return bestMoveScore;
+//     } else {
+//         let bestMoveScore = Infinity;
+//         for (let i = 0; i < historyCopy.length ; i++) {
+//             if (availableMovesCopy[i]) {
+//                 historyCopy[i] = opponent.sigel;
+//                 availableMovesCopy[i] = false;
+//                 let moveScore = minMax(historyCopy, availableMovesCopy, (depth + 1), true);
+//                 historyCopy[i] = '';
+//                 availableMovesCopy[i] = true;
+//                 if (moveScore < bestMoveScore) {
+//                     bestMoveScore = moveScore;
+//                 }
+//             }
+//         }
+//         return bestMoveScore;
+//     }
+// }
+
+
+// const aiPlayer = (availableMoves, moveHistory, player) => {
+//     console.log('aiPlayer called')
+
+//     let bestMoveScore = -Infinity;
+//     let move = [];
+//     let historyCopy = moveHistory;
+//     let availableMovesCopy = availableMoves;
+
+//     for (let i = 0; i < moveHistory.length; i++) {
+//         if (availableMovesCopy[i]) {
+//             historyCopy[i] = player.sigel;
+//             availableMovesCopy[i] = false;
+//             let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
+//             historyCopy[i] = '';
+//             availableMovesCopy[i] = true;
+//             if (moveScore > bestMoveScore) {
+//                 bestMoveScore = moveScore;
+
+//                 move = i;
+//                 console.log(`MoveScore ${bestMoveScore} ${i}`)
+//             }
+//         }
+//     }
+//     player.makeMove(move)
+// }
+
+const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 0, callback = () => {}) => {
+
+
+
+        let moveHistoryCopy = moveHistory;
+        let availableMovesCopy = availableMoves;
+        let opponent = player.sigel ==='O' ? player1 : player2;
+        let moveArray = [];
+        if (depth === 0) {
+            console.log(availableMovesCopy)
+        }
+
+    let resultFound = checkForWinner(moveHistory);
+    if (resultFound !== null) {
+        return (resultFound * 100) - depth;
     }
 
-    if (isMax) {
+    if(isMaxing) {
         let bestMoveScore = -Infinity;
-        for (let i = moveHistory.length; i >= 0; i--) {
-            if (availableMovesCopy[i]) {
-                historyCopy[i] = player.sigel;
+        
+        for(let i = 0; i < availableMovesCopy.length; i++) {
+            if(availableMovesCopy[i]) {
+                
+                moveHistoryCopy[i] = player.sigel;
                 availableMovesCopy[i] = false;
-                let moveScore = minMax(historyCopy, (depth + 1), false);
-                historyCopy[i] = '';
+                let thisMoveScore = aiPlayer(moveHistoryCopy, availableMovesCopy, opponent, false, depth+1, callback);
+                moveHistoryCopy[i] = '';
                 availableMovesCopy[i] = true;
-                if (moveScore > bestMoveScore) {
-                    bestMoveScore = moveScore;
-                    move = i;
+                bestMoveScore = Math.max(thisMoveScore, bestMoveScore);
+
+                if (depth === 0) {
+                    moveArray.push([i, bestMoveScore]);
                 }
             }
         }
-        return bestMoveScore;
+        if(depth === 0) {
+            let sortedArray = moveArray.sort((a, b) => b[1] - a[1])
+            console.log(sortedArray)
+            callback(sortedArray[0][1]);
+            return sortedArray[0][0];
+        }
+        
+        return bestMoveScore //moveArray.indexOf(Math.max(...moveArray));
     } else {
         let bestMoveScore = Infinity;
-        for (let i = moveHistory.length-1; i >=0 ; i--) {
-            if (availableMovesCopy[i]) {
-                historyCopy[i] = opponent.sigel;
+        for(let i = 0; i < availableMovesCopy.length; i++) {
+            if(availableMovesCopy[i]) {
+                
+                moveHistoryCopy[i] = opponent.sigel;
                 availableMovesCopy[i] = false;
-                let moveScore = minMax(historyCopy, (depth + 1), true);
-                historyCopy[i] = '';
+                let thisMoveScore = aiPlayer(moveHistoryCopy, availableMovesCopy, player, true, depth+1, callback);
+                moveHistoryCopy[i] = '';
                 availableMovesCopy[i] = true;
-                if (moveScore < bestMoveScore) {
-                    bestMoveScore = moveScore;
-                    move = i;
+                bestMoveScore = Math.min(thisMoveScore, bestMoveScore);
+
+                if (depth === 0) {
+                    moveArray.push([i, bestMoveScore]);
                 }
             }
         }
-        return bestMoveScore;
-    }
-}
-
-
-const aiPlayer = (availableMoves, moveHistory, player) => {
-    console.log('aiPlayer called')
-
-    let bestMoveScore = -Infinity;
-    let move;
-    let historyCopy = moveHistory;
-    let availableMovesCopy = availableMoves;
-
-    for (let i = 0; i < moveHistory.length; i++) {
-        if (availableMovesCopy[i]) {
-            historyCopy[i] = player.sigel;
-            availableMovesCopy[i] = false;
-            let moveScore = minMax(historyCopy, availableMovesCopy, 0, false);
-            historyCopy[i] = '';
-            availableMovesCopy[i] = true;
-            if (moveScore > bestMoveScore) {
-                bestMoveScore = moveScore;
-                move = i;
-            }
+        if(depth === 0) {
+            let sortedArray = moveArray.sort((a, b) => a[1] - b[1])
+            callback(sortedArray[0][0]);
+            return sortedArray[0][0];
         }
+        
+        return bestMoveScore //moveArray.indexOf(Math.max(...moveArray));
     }
-    player.makeMove(move)
+
+
 }
+
+
+
+
+
+//}
 
 
 // Check State to see if there's a winner
@@ -387,7 +464,9 @@ gb.addEventListener("click", () => {
         checkGameState()
 
         if (player.isComputer === true && playOn) {
-            aiPlayer(availableMoves, moveHistory, player);
+            let aiMove = aiPlayer(moveHistory, availableMoves, player);
+            console.log(`move: ${aiMove}`)
+            player.makeMove(aiMove);
             checkGameState();
         }
     }
