@@ -245,8 +245,7 @@ const takeTurns = () => {
 
 
 // Computer Player Logic based on MiniMax
-const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 0, callback = () => {}) => {
-
+const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 0, callback = (bestMoveScore) => {return bestMoveScore}) => {
     let moveHistoryCopy = moveHistory;
     let availableMovesCopy = availableMoves;
     let opponent = player.sigel ==='O' ? player1 : player2;
