@@ -7,6 +7,9 @@
 - In both situations, the loser of one round starts the next round.
 - If players elect not to play another game, a button will appear, allowing two new players to play.
 
+## Installation
+Because this is basic JavaScript, the files can be coppied into the same directory and the `index.html` file dropped into any modern web broweser.
+
 ## Picking a Winner
 For determining the winner, I simply used a switch statement. It checks for winning compbinations and returns 1 for an X victory, -1 for an O victory, Zero for a tie and null if there is no victor or tie yet. It runs after each trun, including the simulated turns during the Automated Player's turn.
 
@@ -18,3 +21,5 @@ Player 2 can be an automated player. The app will select a space based on the Mi
   - If the game continues, the function is called again with the current simulated move added to the board.
 - Once the moves have been scored, a sorted array is then used to grab the location with the best score.
 - The move is passed to the player object to execute the move.
+
+## 
