@@ -22,4 +22,13 @@ Player 2 can be an automated player. The app will select a space based on the Mi
 - Once the moves have been scored, a sorted array is then used to grab the location with the best score.
 - The move is passed to the player object to execute the move.
 
-## 
+Currently, the automated player makes poor decisions when it's the second player to go but does ok when it takes the first turn. Work is still needed.
+
+## Things to Add in the Future
+- Sounds
+  - On turn click,
+  - On invalid move,
+  - On game end.
+- Final stats modal window at end of match.
+- More intricate styling.
+  

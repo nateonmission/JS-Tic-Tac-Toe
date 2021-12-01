@@ -258,7 +258,6 @@ const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 
 
     if(isMaxing) {
         let bestMoveScore = -Infinity;
-        
         for(let i = 0; i < availableMovesCopy.length; i++) {
             if(availableMovesCopy[i]) {
                 moveHistoryCopy[i] = player.sigel;
