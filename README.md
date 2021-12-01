@@ -14,7 +14,7 @@ For determining the winner, I simply used a switch statement. It checks for winn
 Player 2 can be an automated player. The app will select a space based on the MiniMax algorithm. This is a recusive algorithm that simulates game outcomes looking for the best move.
 - First, it receives current board information;
 - Then it checks for an end game state (winner or tie);
- - If one is found, it returns a score based on what the outcome is;
- - If the game continues, the function is called again with the current simulated move added to the board.
+  - If one is found, it returns a score based on what the outcome is;
+  - If the game continues, the function is called again with the current simulated move added to the board.
 - Once the moves have been scored, a sorted array is then used to grab the location with the best score.
 - The move is passed to the player object to execute the move.
