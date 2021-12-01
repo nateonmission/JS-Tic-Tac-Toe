@@ -315,19 +315,15 @@ const takeTurns = () => {
 
 const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 0, callback = () => {}) => {
 
-
-
-        let moveHistoryCopy = moveHistory;
-        let availableMovesCopy = availableMoves;
-        let opponent = player.sigel ==='O' ? player1 : player2;
-        let moveArray = [];
-        if (depth === 0) {
-            console.log(availableMovesCopy)
-        }
-
+    let moveHistoryCopy = moveHistory;
+    let availableMovesCopy = availableMoves;
+    let opponent = player.sigel ==='O' ? player1 : player2;
+    let moveArray = [];
     let resultFound = checkForWinner(moveHistory);
-    if (resultFound !== null) {
-        return (resultFound * 100) - depth;
+
+    if (resultFound  !== null ) {
+        //console.log(resultFound)
+        return (-10 * resultFound ) - depth;
     }
 
     if(isMaxing) {
@@ -335,9 +331,9 @@ const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 
         
         for(let i = 0; i < availableMovesCopy.length; i++) {
             if(availableMovesCopy[i]) {
-                
                 moveHistoryCopy[i] = player.sigel;
                 availableMovesCopy[i] = false;
+                //console.log(`maxing ${i}: depth ${depth}`)
                 let thisMoveScore = aiPlayer(moveHistoryCopy, availableMovesCopy, opponent, false, depth+1, callback);
                 moveHistoryCopy[i] = '';
                 availableMovesCopy[i] = true;
@@ -360,9 +356,9 @@ const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 
         let bestMoveScore = Infinity;
         for(let i = 0; i < availableMovesCopy.length; i++) {
             if(availableMovesCopy[i]) {
-                
                 moveHistoryCopy[i] = opponent.sigel;
                 availableMovesCopy[i] = false;
+                //console.log(`mining ${i}: depth ${depth}`)
                 let thisMoveScore = aiPlayer(moveHistoryCopy, availableMovesCopy, player, true, depth+1, callback);
                 moveHistoryCopy[i] = '';
                 availableMovesCopy[i] = true;
@@ -374,12 +370,12 @@ const aiPlayer = (moveHistory, availableMoves, player, isMaxing = true, depth = 
             }
         }
         if(depth === 0) {
-            let sortedArray = moveArray.sort((a, b) => a[1] - b[1])
-            callback(sortedArray[0][0]);
+            let sortedArray = moveArray.sort((a, b) => a[1] - b[1]);
+            callback(sortedArray[0][1]);
             return sortedArray[0][0];
         }
         
-        return bestMoveScore //moveArray.indexOf(Math.max(...moveArray));
+        return bestMoveScore; 
     }
 
 
