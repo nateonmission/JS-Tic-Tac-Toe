@@ -24,11 +24,14 @@ Player 2 can be an automated player. The app will select a space based on the Mi
 
 Currently, the automated player makes poor decisions when it's the second player to go but does ok when it takes the first turn. Work is still needed.
 
-## Things to Add in the Future
-- Sounds
+## Things to Do in the Future
+- Tune Automated Player
+- Create Board Object
+- Move Classes to Seperate Files
+- Add Sounds
   - On turn click,
   - On invalid move,
   - On game end.
-- Final stats modal window at end of match.
-- More intricate styling.
+- Build Final stats modal window at end of match.
+- Add More intricate styling.
   
